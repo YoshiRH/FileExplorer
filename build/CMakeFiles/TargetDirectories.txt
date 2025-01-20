@@ -1,0 +1,3 @@
+D:/Kodowanie/FileExplorer/build/CMakeFiles/fileExplorer.dir
+D:/Kodowanie/FileExplorer/build/CMakeFiles/edit_cache.dir
+D:/Kodowanie/FileExplorer/build/CMakeFiles/rebuild_cache.dir
