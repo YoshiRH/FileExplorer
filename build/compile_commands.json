@@ -1,0 +1,8 @@
+[
+{
+  "directory": "D:/Kodowanie/FileExplorer/build",
+  "command": "C:\\mingw64\\bin\\c++.exe -g -o CMakeFiles\\fileExplorer.dir\\app\\main.cpp.obj -c D:\\Kodowanie\\FileExplorer\\app\\main.cpp",
+  "file": "D:\\Kodowanie\\FileExplorer\\app\\main.cpp",
+  "output": "CMakeFiles\\fileExplorer.dir\\app\\main.cpp.obj"
+}
+]

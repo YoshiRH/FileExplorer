@@ -1,5 +1,5 @@
 # ninja log v6
-2	420	7591036556762973	CMakeFiles/fileExplorer.dir/app/main.cpp.obj	504c3f9518bafb6d
-421	578	7591036560952631	fileExplorer.exe	a3ae67569f52c66e
 18	433	7591037056199561	CMakeFiles/fileExplorer.dir/app/main.cpp.obj	504c3f9518bafb6d
 433	552	7591037060349735	fileExplorer.exe	a3ae67569f52c66e
+12	1157	7591955513097639	CMakeFiles/fileExplorer.dir/app/main.cpp.obj	f614886936bcc615
+1157	1306	7591955524551061	fileExplorer.exe	1eb0c38ab482b005

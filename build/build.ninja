@@ -12,7 +12,7 @@
 
 # =============================================================================
 # Project: fileExplorer
-# Configurations: 
+# Configurations: Debug
 # =============================================================================
 
 #############################################
@@ -20,6 +20,11 @@
 
 ninja_required_version = 1.5
 
+
+#############################################
+# Set configuration variable for custom commands.
+
+CONFIGURATION = Debug
 # =============================================================================
 # Include auxiliary files.
 
@@ -44,8 +49,9 @@ cmake_ninja_workdir = D$:/Kodowanie/FileExplorer/build/
 
 build cmake_object_order_depends_target_fileExplorer: phony || .
 
-build CMakeFiles/fileExplorer.dir/app/main.cpp.obj: CXX_COMPILER__fileExplorer_unscanned_ D$:/Kodowanie/FileExplorer/app/main.cpp || cmake_object_order_depends_target_fileExplorer
+build CMakeFiles/fileExplorer.dir/app/main.cpp.obj: CXX_COMPILER__fileExplorer_unscanned_Debug D$:/Kodowanie/FileExplorer/app/main.cpp || cmake_object_order_depends_target_fileExplorer
   DEP_FILE = CMakeFiles\fileExplorer.dir\app\main.cpp.obj.d
+  FLAGS = -g
   OBJECT_DIR = CMakeFiles\fileExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\fileExplorer.dir\app
   TARGET_COMPILE_PDB = CMakeFiles\fileExplorer.dir\
@@ -59,7 +65,8 @@ build CMakeFiles/fileExplorer.dir/app/main.cpp.obj: CXX_COMPILER__fileExplorer_u
 #############################################
 # Link the executable fileExplorer.exe
 
-build fileExplorer.exe: CXX_EXECUTABLE_LINKER__fileExplorer_ CMakeFiles/fileExplorer.dir/app/main.cpp.obj
+build fileExplorer.exe: CXX_EXECUTABLE_LINKER__fileExplorer_Debug CMakeFiles/fileExplorer.dir/app/main.cpp.obj
+  FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\fileExplorer.dir
   POST_BUILD = cd .
