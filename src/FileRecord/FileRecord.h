@@ -2,6 +2,8 @@
 
 #include <string>
 
+
+// Wrapper class for a file
 class FileRecord
 {
 public:

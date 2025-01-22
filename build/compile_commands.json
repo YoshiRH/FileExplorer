@@ -4,5 +4,17 @@
   "command": "C:\\mingw64\\bin\\c++.exe -g -o CMakeFiles\\fileExplorer.dir\\app\\main.cpp.obj -c D:\\Kodowanie\\FileExplorer\\app\\main.cpp",
   "file": "D:\\Kodowanie\\FileExplorer\\app\\main.cpp",
   "output": "CMakeFiles\\fileExplorer.dir\\app\\main.cpp.obj"
+},
+{
+  "directory": "D:/Kodowanie/FileExplorer/build",
+  "command": "C:\\mingw64\\bin\\c++.exe -g -o CMakeFiles\\fileExplorer.dir\\src\\FileExplorer\\FileExplorer.cpp.obj -c D:\\Kodowanie\\FileExplorer\\src\\FileExplorer\\FileExplorer.cpp",
+  "file": "D:\\Kodowanie\\FileExplorer\\src\\FileExplorer\\FileExplorer.cpp",
+  "output": "CMakeFiles\\fileExplorer.dir\\src\\FileExplorer\\FileExplorer.cpp.obj"
+},
+{
+  "directory": "D:/Kodowanie/FileExplorer/build",
+  "command": "C:\\mingw64\\bin\\c++.exe -g -o CMakeFiles\\fileExplorer.dir\\src\\FileList\\FileList.cpp.obj -c D:\\Kodowanie\\FileExplorer\\src\\FileList\\FileList.cpp",
+  "file": "D:\\Kodowanie\\FileExplorer\\src\\FileList\\FileList.cpp",
+  "output": "CMakeFiles\\fileExplorer.dir\\src\\FileList\\FileList.cpp.obj"
 }
 ]

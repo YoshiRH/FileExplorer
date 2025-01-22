@@ -1,15 +1,24 @@
-#pragma once
+#include "FileList.h"
+#include <iostream>
 
-#include "FileList.h";
-
-void FileList::add(const std::string& fileName, bool isDirectory)
+void FileList::add(std::string fileName, bool isDirectory)
 {
     records.emplace_back(fileName, isDirectory);
 }
 
-const FileRecord FileList::getCurrentElement() const
+const FileRecord& FileList::getCurrentElement() const
 {
     return records[currentIndex];
+}
+
+const FileRecord& FileList::getRecord(size_t index) const
+{
+        return records[index];
+}
+
+size_t FileList::getcurrentIndex() const
+{
+    return currentIndex;
 }
 
 void FileList::next()
