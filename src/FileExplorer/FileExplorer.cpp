@@ -18,11 +18,12 @@ void FileExplorer::loadDirectory(const std::string &filePath, FileList &fileList
 
     // Load every file in directory to our list
     try{
-        for(const auto& file : fs::directory_iterator(filePath)) {
+        for(auto& file : fs::directory_iterator(filePath)) {
             fileList.add(file.path().filename().string(), file.is_directory());
         }
     } catch (fs::filesystem_error& e) {
         std::cerr << "Couldn't load the directory: " << e.what() << '\n';
+        std::cin.get();
     }
 }
 
@@ -33,12 +34,7 @@ void FileExplorer::displayDirectory(const FileList &fileList)
     for(size_t i=0; i<fileList.size(); i++) {
         const FileRecord& record = fileList.getRecord(i);
 
-        if(i == fileList.getcurrentIndex()) {
-             std::cout << "\033[1;32m> ";
-        } else {
-            std::cout << " ";
-        }
-
+        std::cout << (i == fileList.getcurrentIndex() ? "\033[1;32m> " : " ");
         std::cout << (record.isDirectory ? "[DIR] " : "[FILE] ") << record.fileName << "\033[0m" << '\n';
     }
 }
@@ -75,6 +71,71 @@ void FileExplorer::openFile(const std::string &filePath)
     file.close();
     std::cout << "\nPress any key to close the file...\n";
     std::cin.get();
+}
+
+void FileExplorer::createFile(const std::string &filePath)
+{
+    clearScreen();
+
+    std::string fileName{};
+    std::string msg{};
+
+    std::cout << "Enter the name of the file: ";
+    std::getline(std::cin, fileName);
+    std::cout << "\n\nEnter the msg:";
+    std::getline(std::cin, msg);
+
+    std::ofstream file(filePath + "/" + fileName + ".txt");
+    
+    if(file.is_open()) {
+        file << msg;
+        file.close();
+    } else {
+        std::cerr << "Couldn't create the file...\n";
+        std::cin.get();
+    }
+}
+
+void FileExplorer::deleteFile(const std::string &filePath)
+{
+    clearScreen();
+
+    char choice{};
+    std::cout << "Do you want to delete this file? [y - yes, n - no]: ";
+    std::cin >> choice;
+
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+    if(choice == 'y') {
+        std::uintmax_t amount {};
+        try{
+            amount = fs::remove_all(filePath);
+        } catch (fs::filesystem_error& e) {
+            std::cerr << "Couldn't delete the file: " << e.what() << '\n';
+            std::cin.get();
+        }
+        
+        std::cout << "Deleted " << amount << " files in total.\n\nPress any key to continue...\n";
+        std::cin.get();
+    }
+}
+
+void FileExplorer::createDirectory(const std::string &filePath)
+{
+    clearScreen();
+
+    std::string dirName{};
+    std::cout << "\nEnter the name of the directory: ";
+    std::getline(std::cin, dirName);
+
+    if(!fs::exists(dirName)) {
+        try{
+            fs::create_directory(filePath + "/" + dirName);
+        } catch (const fs::filesystem_error& e) {
+            std::cerr << "Couldn't create the directory: " << e.what() << '\n';
+            std::cin.get();
+        }
+    }
 }
 
 void FileExplorer::clearScreen()

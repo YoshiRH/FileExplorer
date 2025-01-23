@@ -67,6 +67,12 @@ build CMakeFiles/fileExplorer.dir/src/FileList/FileList.cpp.obj: CXX_COMPILER__f
   OBJECT_DIR = CMakeFiles\fileExplorer.dir
   OBJECT_FILE_DIR = CMakeFiles\fileExplorer.dir\src\FileList
 
+build CMakeFiles/fileExplorer.dir/src/HandleInput/HandleInput.cpp.obj: CXX_COMPILER__fileExplorer_unscanned_Debug D$:/Kodowanie/FileExplorer/src/HandleInput/HandleInput.cpp || cmake_object_order_depends_target_fileExplorer
+  DEP_FILE = CMakeFiles\fileExplorer.dir\src\HandleInput\HandleInput.cpp.obj.d
+  FLAGS = -g
+  OBJECT_DIR = CMakeFiles\fileExplorer.dir
+  OBJECT_FILE_DIR = CMakeFiles\fileExplorer.dir\src\HandleInput
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target fileExplorer
@@ -75,7 +81,7 @@ build CMakeFiles/fileExplorer.dir/src/FileList/FileList.cpp.obj: CXX_COMPILER__f
 #############################################
 # Link the executable fileExplorer.exe
 
-build fileExplorer.exe: CXX_EXECUTABLE_LINKER__fileExplorer_Debug CMakeFiles/fileExplorer.dir/app/main.cpp.obj CMakeFiles/fileExplorer.dir/src/FileExplorer/FileExplorer.cpp.obj CMakeFiles/fileExplorer.dir/src/FileList/FileList.cpp.obj
+build fileExplorer.exe: CXX_EXECUTABLE_LINKER__fileExplorer_Debug CMakeFiles/fileExplorer.dir/app/main.cpp.obj CMakeFiles/fileExplorer.dir/src/FileExplorer/FileExplorer.cpp.obj CMakeFiles/fileExplorer.dir/src/FileList/FileList.cpp.obj CMakeFiles/fileExplorer.dir/src/HandleInput/HandleInput.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\fileExplorer.dir

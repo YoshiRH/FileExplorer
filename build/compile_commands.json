@@ -16,5 +16,11 @@
   "command": "C:\\mingw64\\bin\\c++.exe -g -o CMakeFiles\\fileExplorer.dir\\src\\FileList\\FileList.cpp.obj -c D:\\Kodowanie\\FileExplorer\\src\\FileList\\FileList.cpp",
   "file": "D:\\Kodowanie\\FileExplorer\\src\\FileList\\FileList.cpp",
   "output": "CMakeFiles\\fileExplorer.dir\\src\\FileList\\FileList.cpp.obj"
+},
+{
+  "directory": "D:/Kodowanie/FileExplorer/build",
+  "command": "C:\\mingw64\\bin\\c++.exe -g -o CMakeFiles\\fileExplorer.dir\\src\\HandleInput\\HandleInput.cpp.obj -c D:\\Kodowanie\\FileExplorer\\src\\HandleInput\\HandleInput.cpp",
+  "file": "D:\\Kodowanie\\FileExplorer\\src\\HandleInput\\HandleInput.cpp",
+  "output": "CMakeFiles\\fileExplorer.dir\\src\\HandleInput\\HandleInput.cpp.obj"
 }
 ]
