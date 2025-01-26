@@ -37,18 +37,8 @@ void FileExplorer::displayDirectory(const FileList &fileList)
         std::cout << (i == fileList.getcurrentIndex() ? "\033[1;32m> " : " ");
         std::cout << (record.isDirectory ? "[DIR] " : "[FILE] ") << record.fileName << "\033[0m" << '\n';
     }
-}
 
-void FileExplorer::displayHelp()
-{
-    std::cout << "============= Controls =============\n";
-    std::cout << "Arrow UP   - Move to previous element\n";
-    std::cout << "Arrow DOWN - Move to next element\n";
-    std::cout << "Enter      - Open directory or file\n";
-    std::cout << "Q          - Exit\n";
-    std::cout << "\nPress any key to continue...\n";
-
-    std::cin.get();
+    displayControls();
 }
 
 void FileExplorer::openFile(const std::string &filePath)
@@ -143,3 +133,22 @@ void FileExplorer::clearScreen()
     std::cout << system("cls");
 }
 
+void FileExplorer::displayHelp()
+{
+    std::cout << "============= Controls =============\n";
+    std::cout << "Arrow UP   - Move to previous element\n";
+    std::cout << "Arrow DOWN - Move to next element\n";
+    std::cout << "Enter      - Open directory or file\n";
+    std::cout << "D          - Create directory \n";
+    std::cout << "F          - Create .txt file\n";
+    std::cout << "Z          - Delete file/directory\n";
+    std::cout << "Q          - Exit\n";
+    std::cout << "\nPress any key to continue...\n";
+
+    std::cin.get();
+}
+
+void FileExplorer::displayControls()
+{
+    std::cout << "\n[D - Create dir] [F - Create .txt] [Z - Delete]\n\n";
+}

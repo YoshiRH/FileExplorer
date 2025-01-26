@@ -13,5 +13,6 @@ void deleteFile(const std::string& filePath);
 void createDirectory(const std::string& filePath);
 
 void displayHelp();
+void displayControls();
 void clearScreen();
 }
