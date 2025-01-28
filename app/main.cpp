@@ -9,10 +9,10 @@ namespace fs = std::filesystem;
 int main() {
     FileExplorer::displayHelp();
 
-    std::string currentPath {"/"};
+    std::string currentPath;
     FileList fileList;
 
-    FileExplorer::loadDirectory(currentPath, fileList);
+    FileExplorer::loadDirectory(currentPath, fileList, true);
 
     while(true) {
         FileExplorer::displayDirectory(fileList);

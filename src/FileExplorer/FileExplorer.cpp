@@ -1,20 +1,40 @@
-
 #include "FileExplorer.h"
 #include <iostream>
 #include <fstream>
 #include <filesystem>
 #include <cstdlib>
+#include <windows.h>
 
 namespace fs = std::filesystem;
 
-void FileExplorer::loadDirectory(const std::string &filePath, FileList &fileList)
+void FileExplorer::loadDrives(FileList& fileList)
+{
+    DWORD driveMask = GetLogicalDrives();
+
+    if(driveMask == 0) {
+        std::cerr << "Couldn't load any drives...\n";
+        std::cin.get();
+        return;
+    }
+
+    for(char drive = 'A'; drive <= 'Z'; drive++) {
+        if(driveMask & 1) {
+            fileList.add(std::string(1, drive) + ":/", true);
+        }
+        driveMask >>= 1;
+    }
+}
+
+void FileExplorer::loadDirectory(const std::string &filePath, FileList &fileList, bool Drives)
 {
     fileList.clear();
 
-    // Check if there is possibility to move to parent dir
-    if(fs::path(filePath) != fs::path("/")) {
-        fileList.add("..", true);
+    if(Drives) {
+        loadDrives(fileList);
+        return;
     }
+
+    fileList.add("..", true);
 
     // Load every file in directory to our list
     try{
@@ -30,6 +50,7 @@ void FileExplorer::loadDirectory(const std::string &filePath, FileList &fileList
 void FileExplorer::displayDirectory(const FileList &fileList)
 {
     clearScreen();
+    std::cout << '\n';
 
     for(size_t i=0; i<fileList.size(); i++) {
         const FileRecord& record = fileList.getRecord(i);

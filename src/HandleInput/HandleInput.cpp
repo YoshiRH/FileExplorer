@@ -3,9 +3,11 @@
 #include <filesystem>
 
 namespace fs = std::filesystem;
+constexpr int ROOT_SIZE_PATH {3};
 
 void handleInput(std::string& currentPath, FileList& fileList, char key)
 {
+        bool isDrives {false};
 
         if(key == 'd') {
             FileExplorer::createDirectory(currentPath);
@@ -32,9 +34,14 @@ void handleInput(std::string& currentPath, FileList& fileList, char key)
 
             try {
                 if(selectedFile.fileName == "..") {
-                    currentPath = fs::path(currentPath).parent_path().string();
+                    if(currentPath.length() == ROOT_SIZE_PATH) {
+                        isDrives = true;
+                        currentPath.clear();
+                    } else {
+                        currentPath = fs::path(currentPath).parent_path().string();
+                    }
                 } else if(selectedFile.isDirectory) {
-                    if(currentPath == "/")
+                    if(currentPath.empty())
                         currentPath += selectedFile.fileName;
                     else
                         currentPath += "/" + selectedFile.fileName;
@@ -42,7 +49,7 @@ void handleInput(std::string& currentPath, FileList& fileList, char key)
                     FileExplorer::openFile(currentPath + "/" + selectedFile.fileName);
                 }
 
-                FileExplorer::loadDirectory(currentPath, fileList);
+                FileExplorer::loadDirectory(currentPath, fileList, isDrives);
             } catch (const fs::filesystem_error& e) {
                 std::cerr << "Couldn't open the dir: " << e.what() << '\n';
                 std::cin.get();
