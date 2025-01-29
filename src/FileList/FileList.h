@@ -12,12 +12,20 @@ private:
     size_t currentIndex {0}; // Current element
 
 public:
+    // Add path with fileName to fileList
     void add(std::string fileName, bool isDirectory);
+
+    // Return current element (currentIndex)
     const FileRecord& getCurrentElement() const;
+
+    // Return element with passed index
     const FileRecord& getRecord(size_t index) const;
-    size_t getcurrentIndex() const;
+
+    
     void next();
     void previous();
-    size_t size() const;
     void clear();
+    
+    size_t getcurrentIndex() const;
+    size_t size() const;
 };

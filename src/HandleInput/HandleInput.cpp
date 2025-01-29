@@ -1,58 +1,63 @@
 #include "HandleInput.h"
-#include <iostream>
+#include "../FileSystemException/FileSystemException.h"
 #include <filesystem>
 
 namespace fs = std::filesystem;
 constexpr int ROOT_SIZE_PATH {3};
 
+void reloadDirectory(const std::string &currentPath, FileList &fileList, bool isDrives) 
+{
+    try {
+        FileExplorer::loadDirectory(currentPath, fileList, isDrives);
+    } catch (const fs::filesystem_error& e) {
+        throw FileSystemException("Failed to load directory: " + std::string(e.what()));
+    }
+}
+
 void handleInput(std::string& currentPath, FileList& fileList, char key)
 {
         bool isDrives {false};
 
-        if(key == 'd') {
+        switch (key)
+        {
+        case 'd':
             FileExplorer::createDirectory(currentPath);
-            FileExplorer::loadDirectory(currentPath, fileList);
-            return;
-        }
-        else if(key == 'f') {
+            break;
+        case 'f':
             FileExplorer::createFile(currentPath);
-            FileExplorer::loadDirectory(currentPath, fileList);
-            return;
-        }
-        else if(key == 'z') {
+            break;
+        case 'z':
             FileExplorer::deleteFile(currentPath + "/" + fileList.getCurrentElement().fileName);
-            FileExplorer::loadDirectory(currentPath, fileList);
-            return;
-        }
-
-        if (key == 72) {
+            break;
+        case HandleKeys::KEY_UP:
             fileList.previous();
-        } else if (key == 80) {
+            return;
+        case HandleKeys::KEY_DOWN: 
             fileList.next();
-        } else if(key == 13) {
+            return;
+        case HandleKeys::KEY_ENTER: { 
             const FileRecord& selectedFile = fileList.getCurrentElement();
 
-            try {
-                if(selectedFile.fileName == "..") {
-                    if(currentPath.length() == ROOT_SIZE_PATH) {
-                        isDrives = true;
-                        currentPath.clear();
-                    } else {
-                        currentPath = fs::path(currentPath).parent_path().string();
-                    }
-                } else if(selectedFile.isDirectory) {
-                    if(currentPath.empty())
-                        currentPath += selectedFile.fileName;
-                    else
-                        currentPath += "/" + selectedFile.fileName;
+            if(selectedFile.fileName == "..") {
+                if(currentPath.length() == ROOT_SIZE_PATH) {
+                    isDrives = true;
+                    currentPath.clear();
                 } else {
-                    FileExplorer::openFile(currentPath + "/" + selectedFile.fileName);
+                    currentPath = fs::path(currentPath).parent_path().string();
                 }
-
-                FileExplorer::loadDirectory(currentPath, fileList, isDrives);
-            } catch (const fs::filesystem_error& e) {
-                std::cerr << "Couldn't open the dir: " << e.what() << '\n';
-                std::cin.get();
+            } else if(selectedFile.isDirectory) {
+                currentPath = currentPath.empty() ? 
+                    currentPath += selectedFile.fileName : currentPath += "/" + selectedFile.fileName;
+            } else {
+                FileExplorer::openFile(currentPath + "/" + selectedFile.fileName);
+                return;
             }
+            break;
         }
+        default:
+            return;
+        }
+        reloadDirectory(currentPath, fileList, isDrives);
 }
+
+

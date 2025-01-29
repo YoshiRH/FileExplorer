@@ -9,7 +9,9 @@ namespace fs = std::filesystem;
 
 void FileExplorer::loadDrives(FileList& fileList)
 {
-    DWORD driveMask = GetLogicalDrives();
+#ifdef _WIN32
+    // Get bitMask of available disks in system
+    DWORD driveMask = GetLogicalDrives(); 
 
     if(driveMask == 0) {
         std::cerr << "Couldn't load any drives...\n";
@@ -18,11 +20,18 @@ void FileExplorer::loadDrives(FileList& fileList)
     }
 
     for(char drive = 'A'; drive <= 'Z'; drive++) {
+        // If bit is equal to 1, it means that this specific disk (A-Z) is available
         if(driveMask & 1) {
             fileList.add(std::string(1, drive) + ":/", true);
         }
+
+        // Move bit one position to right -> move to next disk (A-Z) 
         driveMask >>= 1;
     }
+#else
+    // Just add root directory if it's not Windows
+    fileList.add("/", true);
+#endif
 }
 
 void FileExplorer::loadDirectory(const std::string &filePath, FileList &fileList, bool Drives)
@@ -34,16 +43,16 @@ void FileExplorer::loadDirectory(const std::string &filePath, FileList &fileList
         return;
     }
 
+    fs::path path(filePath);
     fileList.add("..", true);
 
     // Load every file in directory to our list
     try{
-        for(auto& file : fs::directory_iterator(filePath)) {
+        for(auto& file : fs::directory_iterator(path)) {
             fileList.add(file.path().filename().string(), file.is_directory());
         }
     } catch (fs::filesystem_error& e) {
-        std::cerr << "Couldn't load the directory: " << e.what() << '\n';
-        std::cin.get();
+        throw FileSystemException("Couldn't load the directory: " + path.string());
     }
 }
 
@@ -64,17 +73,15 @@ void FileExplorer::displayDirectory(const FileList &fileList)
 
 void FileExplorer::openFile(const std::string &filePath)
 {
-    std::ifstream file(filePath);
+    fs::path path(filePath);
+    std::ifstream file(path);
 
     if(!file) {
-        std::cerr << "Couldn't open the file: " << filePath << '\n';
-        std::cin.get();
-        return;
+        throw FileSystemException("Couldn't open the file" + path.string());
     }
 
     clearScreen();
     std::string line;
-
     while(std::getline(file, line)) {
         std::cout << line << '\n';
     }
@@ -86,6 +93,7 @@ void FileExplorer::openFile(const std::string &filePath)
 
 void FileExplorer::createFile(const std::string &filePath)
 {
+    fs::path path(filePath);
     clearScreen();
 
     std::string fileName{};
@@ -96,19 +104,19 @@ void FileExplorer::createFile(const std::string &filePath)
     std::cout << "\n\nEnter the msg:";
     std::getline(std::cin, msg);
 
-    std::ofstream file(filePath + "/" + fileName + ".txt");
+    std::ofstream file(path.string() + "/" + fileName + ".txt");
     
     if(file.is_open()) {
         file << msg;
         file.close();
     } else {
-        std::cerr << "Couldn't create the file...\n";
-        std::cin.get();
+        throw FileSystemException("Couldn't create the file: " + fileName);
     }
 }
 
 void FileExplorer::deleteFile(const std::string &filePath)
 {
+    fs::path path(filePath);
     clearScreen();
 
     char choice{};
@@ -120,10 +128,9 @@ void FileExplorer::deleteFile(const std::string &filePath)
     if(choice == 'y') {
         std::uintmax_t amount {};
         try{
-            amount = fs::remove_all(filePath);
+            amount = fs::remove_all(path);
         } catch (fs::filesystem_error& e) {
-            std::cerr << "Couldn't delete the file: " << e.what() << '\n';
-            std::cin.get();
+            throw FileSystemException("Couldn't delete the file: " + path.filename().string());
         }
         
         std::cout << "Deleted " << amount << " files in total.\n\nPress any key to continue...\n";
@@ -133,6 +140,7 @@ void FileExplorer::deleteFile(const std::string &filePath)
 
 void FileExplorer::createDirectory(const std::string &filePath)
 {
+    fs::path path(filePath);
     clearScreen();
 
     std::string dirName{};
@@ -141,17 +149,20 @@ void FileExplorer::createDirectory(const std::string &filePath)
 
     if(!fs::exists(dirName)) {
         try{
-            fs::create_directory(filePath + "/" + dirName);
+            fs::create_directory(path.string() + "/" + dirName);
         } catch (const fs::filesystem_error& e) {
-            std::cerr << "Couldn't create the directory: " << e.what() << '\n';
-            std::cin.get();
+            throw FileSystemException("Couldn't create the directory: " + dirName);
         }
     }
 }
 
 void FileExplorer::clearScreen()
 {
-    std::cout << system("cls");
+#ifdef _WIN32
+    std::system("cls");
+#else
+    std::system("clear");
+#endif
 }
 
 void FileExplorer::displayHelp()
