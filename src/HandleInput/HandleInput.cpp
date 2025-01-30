@@ -1,6 +1,7 @@
 #include "HandleInput.h"
 #include "../FileSystemException/FileSystemException.h"
 #include <filesystem>
+#include <iostream>
 
 namespace fs = std::filesystem;
 constexpr int ROOT_SIZE_PATH {3};
@@ -23,12 +24,20 @@ void handleInput(std::string& currentPath, FileList& fileList, char key)
         case 'd':
             FileExplorer::createDirectory(currentPath);
             break;
-        case 'f':
+        case 'z':
             FileExplorer::createFile(currentPath);
             break;
-        case 'z':
+        case 'x':
             FileExplorer::deleteFile(currentPath + "/" + fileList.getCurrentElement().fileName);
             break;
+        case 'f': 
+        {
+            std::cout << "Enter the file name which you want to find: ";
+            std::string fileName{};
+            std::getline(std::cin, fileName);
+            FileExplorer::searchForFile(currentPath, fileName, fileList);
+            return;  
+        }      
         case HandleKeys::KEY_UP:
             fileList.previous();
             return;
@@ -46,10 +55,9 @@ void handleInput(std::string& currentPath, FileList& fileList, char key)
                     currentPath = fs::path(currentPath).parent_path().string();
                 }
             } else if(selectedFile.isDirectory) {
-                currentPath = currentPath.empty() ? 
-                    currentPath += selectedFile.fileName : currentPath += "/" + selectedFile.fileName;
+                currentPath = selectedFile.path.string();
             } else {
-                FileExplorer::openFile(currentPath + "/" + selectedFile.fileName);
+                FileExplorer::openFile(selectedFile.path);
                 return;
             }
             break;

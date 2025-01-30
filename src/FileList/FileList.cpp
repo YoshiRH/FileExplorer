@@ -1,9 +1,9 @@
 #include "FileList.h"
 #include <iostream>
 
-void FileList::add(std::string fileName, bool isDirectory)
+void FileList::add(fs::path path ,std::string fileName, bool isDirectory)
 {
-    records.emplace_back(fileName, isDirectory);
+    records.emplace_back(path, fileName, isDirectory);
 }
 
 const FileRecord& FileList::getCurrentElement() const

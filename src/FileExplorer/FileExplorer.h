@@ -14,10 +14,11 @@ void loadDrives(FileList& fileList);
 // Print out content of current directory
 void displayDirectory(const FileList& fileList);
 
-void openFile(const std::string& filePath);
+void openFile(const fs::path& filePath);
 void createFile(const std::string& filePath);
 void deleteFile(const std::string& filePath);
 void createDirectory(const std::string& filePath);
+void searchForFile(const std::string& currentPath, const std::string& query, FileList& fileList);
 
 void displayHelp();
 void displayControls();

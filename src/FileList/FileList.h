@@ -2,6 +2,9 @@
 
 #include "../FileRecord/FileRecord.h"
 #include <vector>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 
 // Class to hold files in certain filePath
@@ -13,7 +16,7 @@ private:
 
 public:
     // Add path with fileName to fileList
-    void add(std::string fileName, bool isDirectory);
+    void add(fs::path path, std::string fileName, bool isDirectory);
 
     // Return current element (currentIndex)
     const FileRecord& getCurrentElement() const;

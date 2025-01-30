@@ -22,7 +22,7 @@ void FileExplorer::loadDrives(FileList& fileList)
     for(char drive = 'A'; drive <= 'Z'; drive++) {
         // If bit is equal to 1, it means that this specific disk (A-Z) is available
         if(driveMask & 1) {
-            fileList.add(std::string(1, drive) + ":/", true);
+            fileList.add(std::string(1, drive) + ":/" ,std::string(1, drive) + ":/", true);
         }
 
         // Move bit one position to right -> move to next disk (A-Z) 
@@ -30,7 +30,7 @@ void FileExplorer::loadDrives(FileList& fileList)
     }
 #else
     // Just add root directory if it's not Windows
-    fileList.add("/", true);
+    fileList.add("/", "/", true);
 #endif
 }
 
@@ -44,12 +44,12 @@ void FileExplorer::loadDirectory(const std::string &filePath, FileList &fileList
     }
 
     fs::path path(filePath);
-    fileList.add("..", true);
+    fileList.add(path.parent_path(), "..", true);
 
     // Load every file in directory to our list
     try{
         for(auto& file : fs::directory_iterator(path)) {
-            fileList.add(file.path().filename().string(), file.is_directory());
+            fileList.add(file.path() ,file.path().filename().string(), file.is_directory());
         }
     } catch (fs::filesystem_error& e) {
         throw FileSystemException("Couldn't load the directory: " + path.string());
@@ -71,13 +71,12 @@ void FileExplorer::displayDirectory(const FileList &fileList)
     displayControls();
 }
 
-void FileExplorer::openFile(const std::string &filePath)
+void FileExplorer::openFile(const fs::path& filePath)
 {
-    fs::path path(filePath);
-    std::ifstream file(path);
+    std::ifstream file(filePath);
 
     if(!file) {
-        throw FileSystemException("Couldn't open the file" + path.string());
+        throw FileSystemException("Couldn't open the file" + filePath.string());
     }
 
     clearScreen();
@@ -156,6 +155,24 @@ void FileExplorer::createDirectory(const std::string &filePath)
     }
 }
 
+void FileExplorer::searchForFile(const std::string &currentPath, const std::string &query, FileList &fileList)
+{
+    fs::path path(currentPath);
+
+    for(const auto& entry : fs::recursive_directory_iterator(path)) {
+        if(entry.path().filename().string().find(query) != std::string::npos) {
+            fileList.clear();
+            fileList.add(entry.path().parent_path(), "GO BACK", true);
+            fileList.add(entry.path() ,entry.path().filename().string(), entry.is_directory());
+            return;
+        }
+    }
+
+    std::cout << "Couldn't find the file: " << query << '\n';
+    std::cout << "Click Enter to continue... \n";
+    std::cin.get();
+}
+
 void FileExplorer::clearScreen()
 {
 #ifdef _WIN32
@@ -172,8 +189,9 @@ void FileExplorer::displayHelp()
     std::cout << "Arrow DOWN - Move to next element\n";
     std::cout << "Enter      - Open directory or file\n";
     std::cout << "D          - Create directory \n";
-    std::cout << "F          - Create .txt file\n";
-    std::cout << "Z          - Delete file/directory\n";
+    std::cout << "Z          - Create .txt file\n";
+    std::cout << "X          - Delete file/directory\n";
+    std::cout << "F          - Search for file\n";
     std::cout << "Q          - Exit\n";
     std::cout << "\nPress any key to continue...\n";
 
@@ -182,5 +200,5 @@ void FileExplorer::displayHelp()
 
 void FileExplorer::displayControls()
 {
-    std::cout << "\n[D - Create dir] [F - Create .txt] [Z - Delete]\n\n";
+    std::cout << "\n[D - Create dir] [Z - Create .txt] [X - Delete] [F - Find]\n\n";
 }
