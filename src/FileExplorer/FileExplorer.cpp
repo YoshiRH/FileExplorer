@@ -34,7 +34,7 @@ void FileExplorer::loadDrives(FileList& fileList)
 #endif
 }
 
-void FileExplorer::loadDirectory(const std::string &filePath, FileList &fileList, bool Drives)
+void FileExplorer::loadDirectory(const fs::path &filePath, FileList &fileList, bool Drives)
 {
     fileList.clear();
 
@@ -43,16 +43,15 @@ void FileExplorer::loadDirectory(const std::string &filePath, FileList &fileList
         return;
     }
 
-    fs::path path(filePath);
-    fileList.add(path.parent_path(), "..", true);
+    fileList.add(filePath.parent_path(), "..", true);
 
     // Load every file in directory to our list
     try{
-        for(auto& file : fs::directory_iterator(path)) {
+        for(auto& file : fs::directory_iterator(filePath)) {
             fileList.add(file.path() ,file.path().filename().string(), file.is_directory());
         }
     } catch (fs::filesystem_error& e) {
-        throw FileSystemException("Couldn't load the directory: " + path.string());
+        throw FileSystemException("Couldn't load the directory: " + filePath.string());
     }
 }
 
@@ -90,9 +89,8 @@ void FileExplorer::openFile(const fs::path& filePath)
     std::cin.get();
 }
 
-void FileExplorer::createFile(const std::string &filePath)
+void FileExplorer::createFile(const fs::path& filePath)
 {
-    fs::path path(filePath);
     clearScreen();
 
     std::string fileName{};
@@ -103,7 +101,7 @@ void FileExplorer::createFile(const std::string &filePath)
     std::cout << "\n\nEnter the msg:";
     std::getline(std::cin, msg);
 
-    std::ofstream file(path.string() + "/" + fileName + ".txt");
+    std::ofstream file(filePath.string() + "/" + fileName + ".txt");
     
     if(file.is_open()) {
         file << msg;
@@ -113,9 +111,8 @@ void FileExplorer::createFile(const std::string &filePath)
     }
 }
 
-void FileExplorer::deleteFile(const std::string &filePath)
+void FileExplorer::deleteFile(const fs::path& filePath)
 {
-    fs::path path(filePath);
     clearScreen();
 
     char choice{};
@@ -127,9 +124,9 @@ void FileExplorer::deleteFile(const std::string &filePath)
     if(choice == 'y') {
         std::uintmax_t amount {};
         try{
-            amount = fs::remove_all(path);
+            amount = fs::remove_all(filePath);
         } catch (fs::filesystem_error& e) {
-            throw FileSystemException("Couldn't delete the file: " + path.filename().string());
+            throw FileSystemException("Couldn't delete the file: " + filePath.filename().string());
         }
         
         std::cout << "Deleted " << amount << " files in total.\n\nPress any key to continue...\n";
@@ -137,9 +134,8 @@ void FileExplorer::deleteFile(const std::string &filePath)
     }
 }
 
-void FileExplorer::createDirectory(const std::string &filePath)
+void FileExplorer::createDirectory(const fs::path& filePath)
 {
-    fs::path path(filePath);
     clearScreen();
 
     std::string dirName{};
@@ -148,29 +144,34 @@ void FileExplorer::createDirectory(const std::string &filePath)
 
     if(!fs::exists(dirName)) {
         try{
-            fs::create_directory(path.string() + "/" + dirName);
+            fs::create_directory(filePath.string() + "/" + dirName);
         } catch (const fs::filesystem_error& e) {
             throw FileSystemException("Couldn't create the directory: " + dirName);
         }
     }
 }
 
-void FileExplorer::searchForFile(const std::string &currentPath, const std::string &query, FileList &fileList)
+void FileExplorer::searchForFile(const fs::path& currentPath, const std::string &query, FileList &fileList)
 {
-    fs::path path(currentPath);
+    bool isFirst {true};
+    std::cout << "Looking for matching files...\n";
 
-    for(const auto& entry : fs::recursive_directory_iterator(path)) {
+    for(const auto& entry : fs::recursive_directory_iterator(currentPath)) {
         if(entry.path().filename().string().find(query) != std::string::npos) {
-            fileList.clear();
-            fileList.add(entry.path().parent_path(), "GO BACK", true);
+            if(isFirst){
+                fileList.clear();
+                fileList.add(fs::path(currentPath), "GO BACK", true);
+                isFirst = false;
+            }
             fileList.add(entry.path() ,entry.path().filename().string(), entry.is_directory());
-            return;
         }
     }
 
-    std::cout << "Couldn't find the file: " << query << '\n';
-    std::cout << "Click Enter to continue... \n";
-    std::cin.get();
+    if(isFirst) {
+        std::cout << "Couldn't find the file: " << query << '\n';
+        std::cout << "Click Enter to continue... \n";
+        std::cin.get();
+    }
 }
 
 void FileExplorer::clearScreen()

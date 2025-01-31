@@ -6,7 +6,7 @@
 
 namespace FileExplorer {
 // Load files from a directory into fileList
-void loadDirectory(const std::string& filePath, FileList& fileList, bool Drives = false); // Load files from certain directory (filePath) to our list (fileList)
+void loadDirectory(const fs::path& filePath, FileList& fileList, bool Drives = false); // Load files from certain directory (filePath) to our list (fileList)
 
 // Load drives from PC into the fileList
 void loadDrives(FileList& fileList);
@@ -15,10 +15,10 @@ void loadDrives(FileList& fileList);
 void displayDirectory(const FileList& fileList);
 
 void openFile(const fs::path& filePath);
-void createFile(const std::string& filePath);
-void deleteFile(const std::string& filePath);
-void createDirectory(const std::string& filePath);
-void searchForFile(const std::string& currentPath, const std::string& query, FileList& fileList);
+void createFile(const fs::path& filePath);
+void deleteFile(const fs::path& filePath);
+void createDirectory(const fs::path& filePath);
+void searchForFile(const fs::path& currentPath, const std::string& query, FileList& fileList);
 
 void displayHelp();
 void displayControls();

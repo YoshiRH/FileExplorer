@@ -9,7 +9,7 @@ namespace fs = std::filesystem;
 int main() {
     FileExplorer::displayHelp();
 
-    std::string currentPath;
+    fs::path currentPath;
     FileList fileList;
 
     FileExplorer::loadDirectory(currentPath, fileList, true);

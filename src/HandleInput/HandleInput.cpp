@@ -1,12 +1,8 @@
 #include "HandleInput.h"
-#include "../FileSystemException/FileSystemException.h"
-#include <filesystem>
-#include <iostream>
 
-namespace fs = std::filesystem;
 constexpr int ROOT_SIZE_PATH {3};
 
-void reloadDirectory(const std::string &currentPath, FileList &fileList, bool isDrives) 
+void reloadDirectory(const fs::path& currentPath, FileList &fileList, bool isDrives) 
 {
     try {
         FileExplorer::loadDirectory(currentPath, fileList, isDrives);
@@ -15,7 +11,7 @@ void reloadDirectory(const std::string &currentPath, FileList &fileList, bool is
     }
 }
 
-void handleInput(std::string& currentPath, FileList& fileList, char key)
+void handleInput(fs::path& currentPath, FileList& fileList, char key)
 {
         bool isDrives {false};
 
@@ -28,7 +24,7 @@ void handleInput(std::string& currentPath, FileList& fileList, char key)
             FileExplorer::createFile(currentPath);
             break;
         case 'x':
-            FileExplorer::deleteFile(currentPath + "/" + fileList.getCurrentElement().fileName);
+            FileExplorer::deleteFile(fileList.getCurrentElement().path);
             break;
         case 'f': 
         {
@@ -48,11 +44,11 @@ void handleInput(std::string& currentPath, FileList& fileList, char key)
             const FileRecord& selectedFile = fileList.getCurrentElement();
 
             if(selectedFile.fileName == "..") {
-                if(currentPath.length() == ROOT_SIZE_PATH) {
+                if(currentPath.string().length() == ROOT_SIZE_PATH) {
                     isDrives = true;
                     currentPath.clear();
                 } else {
-                    currentPath = fs::path(currentPath).parent_path().string();
+                    currentPath = currentPath.parent_path().string();
                 }
             } else if(selectedFile.isDirectory) {
                 currentPath = selectedFile.path.string();

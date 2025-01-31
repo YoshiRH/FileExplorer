@@ -3,6 +3,11 @@
 #include "../FileExplorer/FileExplorer.h"
 #include "../FileList/FileList.h"
 #include "../FileRecord/FileRecord.h"
+#include "../FileSystemException/FileSystemException.h"
+#include <filesystem>
+#include <iostream>
+
+namespace fs = std::filesystem;
 
 namespace HandleKeys{
     constexpr char KEY_UP = 72;
@@ -11,6 +16,6 @@ namespace HandleKeys{
 } 
 
 // Main function to decide what to do depending on entered key by user
-void handleInput(std::string& currentPath, FileList& fileList, char key);
+void handleInput(fs::path& currentPath, FileList& fileList, char key);
 
-void reloadDirectory(const std::string& currentPath, FileList& fileList, bool isDrives);
+void reloadDirectory(const fs::path& currentPath, FileList& fileList, bool isDrives);
