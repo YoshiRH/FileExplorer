@@ -45,6 +45,11 @@ void handleInput(fs::path& currentPath, FileList& fileList, char key)
             FileExplorer::renameFile(selectedFile, fileName);
             break;      
         }
+        case 'i':{
+            const FileRecord& selectedFile = fileList.getCurrentElement();
+            FileExplorer::showFileProperties(selectedFile.path);
+            break;
+        }
         case HandleKeys::KEY_UP:
             fileList.previous();
             return;

@@ -20,6 +20,8 @@ void deleteFile(const fs::path& filePath);
 void createDirectory(const fs::path& filePath);
 void searchForFile(const fs::path& currentPath, const std::string& query, FileList& fileList);
 void renameFile(const FileRecord& file, const std::string& newFileName);
+void showFileProperties(const fs::path& filePath);
+uintmax_t getFolderSize(const fs::path& folderPath);
 
 void displayHelp();
 void displayControls();

@@ -113,6 +113,7 @@
     "text_encoding": "cpp",
     "typeinfo": "cpp",
     "variant": "cpp",
-    "filesystem": "cpp"
+    "filesystem": "cpp",
+    "chrono": "cpp"
   }
 }

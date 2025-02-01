@@ -1,9 +1,12 @@
 #include "FileExplorer.h"
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <filesystem>
 #include <cstdlib>
 #include <windows.h>
+#include <chrono>
+
 
 namespace fs = std::filesystem;
 
@@ -156,6 +159,7 @@ void FileExplorer::searchForFile(const fs::path& currentPath, const std::string 
     bool isFirst {true};
     std::cout << "Looking for matching files...\n";
 
+    // Go through all the files in directory and add to list files that match the query
     for(const auto& entry : fs::recursive_directory_iterator(currentPath)) {
         if(entry.path().filename().string().find(query) != std::string::npos) {
             if(isFirst){
@@ -194,6 +198,69 @@ void FileExplorer::renameFile(const FileRecord& file, const std::string &newFile
     }
 }
 
+void FileExplorer::showFileProperties(const fs::path &filePath)
+{
+    clearScreen();
+    try {
+        // Basic file info
+        std::cout << "File: " << filePath.filename().string() << '\n';
+        std::cout << "File path: " << filePath.string() << '\n';
+        std::cout << "_______________________________________\n\n";
+
+        // Check the file type
+        if(fs::is_directory(filePath)) {
+            std::cout << "Type: Directory\n";
+            std::cout << "Contains: " << std::distance(fs::directory_iterator(filePath), fs::directory_iterator{}) << " items.\n";
+            uintmax_t directorySize = getFolderSize(filePath);
+            std::cout << "Size: " << directorySize << " bytes\n";
+        } else if (fs::is_regular_file(filePath)) {
+            std::cout << "Type: File\n";
+            std::cout << "Size: " << fs::file_size(filePath) << " bytes\n";
+            std::cout << "Empty: " << (fs::is_empty(filePath) ? "Yes\n" : "No\n");
+        } else {
+            std::cout << "Type: Other\n";
+        }
+
+        // Convert and show time of last modification
+        auto ftime = fs::last_write_time(filePath);
+        auto convertedFTime = std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+            ftime - fs::file_time_type::clock::now() + std::chrono::system_clock::now()
+            );
+        std::time_t cFTime = std::chrono::system_clock::to_time_t(convertedFTime);
+        std::cout << "\nLast modified: " << std::put_time(std::localtime(&cFTime), "%Y-%m-%d %H:%M:%S") << '\n';
+        
+        // Convert and show file permissions
+        fs::perms permissions = fs::status(filePath).permissions();
+        std::cout << "Permissions: ";
+        std::cout << ((permissions & fs::perms::owner_read) != fs::perms::none ? "r" : "-");
+        std::cout << ((permissions & fs::perms::owner_write) != fs::perms::none ? "w" : "-");
+        std::cout << ((permissions & fs::perms::owner_exec) != fs::perms::none ? "x\n" : "-\n");
+        
+        std::cout << "\n\nTo exit click on any key...\n";
+        std::cin.get();
+    } catch (const fs::filesystem_error& e) {
+        throw FileSystemException("Couldn't load the file information: " + filePath.filename().string());
+    }
+}
+
+uintmax_t FileExplorer::getFolderSize(const fs::path &folderPath)
+{
+    uintmax_t size {0};
+
+    // Sum up size of all files in directory
+    try {
+        for(const auto& entry : fs::recursive_directory_iterator(folderPath)) {
+            if(fs::is_regular_file(entry)) {
+                size += fs::file_size(entry);
+            }
+        }
+    } catch (const fs::filesystem_error& e) {
+        throw FileSystemException("Couldn't calculate the directory size");
+    }
+
+    return size;
+}
+
 void FileExplorer::clearScreen()
 {
 #ifdef _WIN32
@@ -214,6 +281,7 @@ void FileExplorer::displayHelp()
     std::cout << "X          - Delete file/directory\n";
     std::cout << "F          - Search for file\n";
     std::cout << "R          - Rename file\n";
+    std::cout << "I          - Show file info\n";
     std::cout << "Q          - Exit\n";
     std::cout << "\nPress any key to continue...\n";
 
@@ -223,5 +291,5 @@ void FileExplorer::displayHelp()
 void FileExplorer::displayControls()
 {
     std::cout << "\n[D - Create dir] [Z - Create .txt] [X - Delete] [F - Find]\n";
-    std::cout << "[R - Rename]\n\n";
+    std::cout << "[R - Rename] [I - Info]\n\n";
 }
