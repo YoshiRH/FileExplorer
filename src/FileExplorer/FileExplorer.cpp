@@ -174,6 +174,26 @@ void FileExplorer::searchForFile(const fs::path& currentPath, const std::string 
     }
 }
 
+void FileExplorer::renameFile(const FileRecord& file, const std::string &newFileName)
+{
+    fs::path newPath{};
+
+    if (!file.isDirectory) {
+        std::string fileType = file.fileName.substr(file.fileName.find_last_of('.'));
+        newPath = file.path.parent_path() / (newFileName + fileType);
+    } else {
+        newPath = file.path.parent_path() / newFileName;
+    }
+
+    try{
+        fs::rename(file.path, newPath);
+    } catch (const fs::filesystem_error& e) {
+        std::cout << "Couldn't change the file name from: " << file.fileName << " to " << newFileName << '\n';
+        std::cout << "Reason: " << e.what() << '\n';
+        std::cin.get();
+    }
+}
+
 void FileExplorer::clearScreen()
 {
 #ifdef _WIN32
@@ -193,6 +213,7 @@ void FileExplorer::displayHelp()
     std::cout << "Z          - Create .txt file\n";
     std::cout << "X          - Delete file/directory\n";
     std::cout << "F          - Search for file\n";
+    std::cout << "R          - Rename file\n";
     std::cout << "Q          - Exit\n";
     std::cout << "\nPress any key to continue...\n";
 
@@ -201,5 +222,6 @@ void FileExplorer::displayHelp()
 
 void FileExplorer::displayControls()
 {
-    std::cout << "\n[D - Create dir] [Z - Create .txt] [X - Delete] [F - Find]\n\n";
+    std::cout << "\n[D - Create dir] [Z - Create .txt] [X - Delete] [F - Find]\n";
+    std::cout << "[R - Rename]\n\n";
 }

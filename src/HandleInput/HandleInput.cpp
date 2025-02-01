@@ -32,8 +32,19 @@ void handleInput(fs::path& currentPath, FileList& fileList, char key)
             std::string fileName{};
             std::getline(std::cin, fileName);
             FileExplorer::searchForFile(currentPath, fileName, fileList);
-            return;  
-        }      
+            return;
+        }
+        case 'r':
+        {
+            const FileRecord& selectedFile = fileList.getCurrentElement();
+            std::string fileName{};
+
+            std::cout << "Enter new file name: ";
+            std::getline(std::cin, fileName);
+
+            FileExplorer::renameFile(selectedFile, fileName);
+            break;      
+        }
         case HandleKeys::KEY_UP:
             fileList.previous();
             return;
@@ -61,6 +72,7 @@ void handleInput(fs::path& currentPath, FileList& fileList, char key)
         default:
             return;
         }
+
         reloadDirectory(currentPath, fileList, isDrives);
 }
 
