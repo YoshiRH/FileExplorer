@@ -11,6 +11,32 @@ void reloadDirectory(const fs::path& currentPath, FileList &fileList, bool isDri
     }
 }
 
+void findFile(const fs::path& currentPath, FileList& fileList)
+{
+    std::cout << "Enter the file name which you want to find: ";
+            std::string fileName{};
+            std::getline(std::cin, fileName);
+            FileExplorer::searchForFile(currentPath, fileName, fileList);
+            return;
+}
+
+void renameFile(const FileList& fileList)
+{
+    const FileRecord& selectedFile = fileList.getCurrentElement();
+    std::string fileName{};
+
+    std::cout << "Enter new file name: ";
+    std::getline(std::cin, fileName);
+
+    FileExplorer::renameFile(selectedFile, fileName);
+}
+
+void showFileProperties(const FileList &fileList)
+{
+    const FileRecord& selectedFile = fileList.getCurrentElement();
+    FileExplorer::showFileProperties(selectedFile.path);
+}
+
 void handleInput(fs::path& currentPath, FileList& fileList, char key)
 {
         bool isDrives {false};
@@ -21,35 +47,20 @@ void handleInput(fs::path& currentPath, FileList& fileList, char key)
             FileExplorer::createDirectory(currentPath);
             break;
         case 'z':
-            FileExplorer::createFile(currentPath);
+            FileExplorer::createFile(currentPath, fileList);
             break;
         case 'x':
             FileExplorer::deleteFile(fileList.getCurrentElement().path);
             break;
         case 'f': 
-        {
-            std::cout << "Enter the file name which you want to find: ";
-            std::string fileName{};
-            std::getline(std::cin, fileName);
-            FileExplorer::searchForFile(currentPath, fileName, fileList);
+            findFile(currentPath, fileList);
             return;
-        }
         case 'r':
-        {
-            const FileRecord& selectedFile = fileList.getCurrentElement();
-            std::string fileName{};
-
-            std::cout << "Enter new file name: ";
-            std::getline(std::cin, fileName);
-
-            FileExplorer::renameFile(selectedFile, fileName);
+            renameFile(fileList);
             break;      
-        }
-        case 'i':{
-            const FileRecord& selectedFile = fileList.getCurrentElement();
-            FileExplorer::showFileProperties(selectedFile.path);
+        case 'i':
+            showFileProperties(fileList);
             break;
-        }
         case HandleKeys::KEY_UP:
             fileList.previous();
             return;

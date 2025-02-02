@@ -2,9 +2,16 @@
 #include "../src/HandleInput/HandleInput.h"
 #include <iostream>
 #include <filesystem>
-#include <conio.h>
+
+#ifdef _WIN32
+    #include <conio.h>
+#else
+    #include <unistd.h>
+#endif
 
 namespace fs = std::filesystem;
+
+char getInput();
 
 int main() {
     FileExplorer::displayHelp();
@@ -17,7 +24,7 @@ int main() {
     while(true) {
         FileExplorer::displayDirectory(fileList);
 
-        char key = _getch();
+        char key = getInput();
         
         if(key == 'q')
             break;
@@ -26,4 +33,13 @@ int main() {
     }
 
     return 0;
+}
+
+char getInput()
+{
+    #ifdef _WIN32
+        return _getch();
+    #else 
+        return getchar();
+    #endif
 }

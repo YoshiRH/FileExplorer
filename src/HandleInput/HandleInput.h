@@ -19,3 +19,6 @@ namespace HandleKeys{
 void handleInput(fs::path& currentPath, FileList& fileList, char key);
 
 void reloadDirectory(const fs::path& currentPath, FileList& fileList, bool isDrives);
+void findFile(const fs::path& currentPath, FileList& fileList);
+void renameFile(const FileList& fileList);
+void showFileProperties(const FileList& fileList);
