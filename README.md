@@ -76,9 +76,3 @@ Q - Quit the program
 
 ## License
 This project is licensed under the MIT License.
-
-## Acknowledgments
-- Inspired by classic command-line file managers.
-- Built using the C++ Standard Library and <filesystem>.
-- Configured with CMake 3.27 for cross-platform builds.
-
