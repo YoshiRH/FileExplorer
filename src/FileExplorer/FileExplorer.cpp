@@ -4,8 +4,10 @@
 #include <fstream>
 #include <filesystem>
 #include <cstdlib>
-#include <windows.h>
 #include <chrono>
+#ifdef _WIN32
+    #include <windows.h>
+#endif
 
 
 namespace fs = std::filesystem;
@@ -196,8 +198,8 @@ void FileExplorer::searchForFile(const fs::path& currentPath, const std::string 
                 fileList.clear();
                 fileList.add(fs::path(currentPath), "GO BACK", true);
                 isFirst = false;
+                fileList.add(entry.path() ,entry.path().filename().string(), entry.is_directory());
             }
-            fileList.add(entry.path() ,entry.path().filename().string(), entry.is_directory());
         }
     }
 
