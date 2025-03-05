@@ -2,7 +2,7 @@
 
 ![C++](https://img.shields.io/badge/C++-17-blue.svg)
 ![CMake](https://img.shields.io/badge/CMake-3.27-%23008FBA)
-![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgrey.svg)
+![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 **FileExplorer** is a lightweight, command-line-based file explorer written in C++. It allows users to navigate through directories, view files, create and delete files/directories, search for files, and more. The program is designed to be simple, fast, and easy to use, making it a handy tool for basic file management tasks.
